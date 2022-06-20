@@ -30,10 +30,6 @@ Initialize Calendar Object in controller with:
 ```sh
 @cal = NepaliCalendar::Calendar.new
 ```
-```ruby
-@cal = NepaliCalendar::Calendar.new
-```
-
 To convert date from AD to BS, copy the following code in the view file:
 ```sh
 <%= @cal.ad_to_bs('2015', '09', '10') %>
