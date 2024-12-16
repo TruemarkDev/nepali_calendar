@@ -57,6 +57,38 @@ module NepaliCalendar
       NepaliCalendar::FiscalYear.new(fiscal_year.to_s.slice(0, 2), fiscal_year.to_s.slice(2, 2))
     end
 
+    def self.fiscal_years_list_in_ad(start_date_ad)
+      start_date_bs = NepaliCalendar::BsCalendar.ad_to_bs(start_date_ad.year, start_date_ad.month, start_date_ad.day)
+      fiscal_years = []
+      fiscal_year_names = Set.new
+    
+      loop_to_year = Date.new(Date.current.year, start_date_ad.month, start_date_ad.day) > Date.current ? Date.current.year + 1 : Date.current.year
+    
+      (start_date_ad.year..loop_to_year).each do |year|
+        fiscal_year = fiscal_year_in_bs_for_ad_date(Date.new(year, start_date_ad.month, start_date_ad.day))
+        start_date = fiscal_year.beginning_of_year
+        end_date = fiscal_year.end_of_year
+    
+        start_date_ad = NepaliCalendar::AdCalendar.bs_to_ad(start_date.year, start_date.month, start_date.day)
+        end_date_ad = NepaliCalendar::AdCalendar.bs_to_ad(end_date.year, end_date.month, end_date.day)
+    
+        fiscal_year_name = "#{start_date.year}/#{end_date.year.to_s.slice(2, 2)}"
+    
+        next if fiscal_year_names.include?(fiscal_year_name)
+    
+        fiscal_years << NepaliCalendar::FiscalYearPeriod.new(
+          start_date: Date.new(start_date_ad.year, start_date_ad.month, start_date_ad.day),
+          end_date: Date.new(end_date_ad.year, end_date_ad.month, end_date_ad.day),
+          name: fiscal_year_name
+        )
+    
+        fiscal_year_names.add(fiscal_year_name)
+      end
+    
+      fiscal_years
+    end
+    
+
     # Should return the '7879' form of string.
     def to_s
       start_year.to_s + end_year.to_s
