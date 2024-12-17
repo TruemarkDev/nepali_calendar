@@ -196,5 +196,19 @@ describe NepaliCalendar do
       fiscal_year = NepaliCalendar::FiscalYear.current_fiscal_year
       expect(fiscal_year.to_s).to eq('7879')
     end
+
+    it 'returns the next fiscal year' do
+      fiscal_year = NepaliCalendar::FiscalYear.new(78, 79).next
+      expect(fiscal_year.to_s).to eq('7980')
+    end
+
+    it 'returns the list of fiscal years in AD' do
+      start_date_ad = Date.new(2020, 8, 1)
+      fiscal_years = NepaliCalendar::FiscalYear.fiscal_years_list_in_ad(start_date_ad)
+      expect(fiscal_years[0].name).to eq('2077/78')
+      expect(fiscal_years[1].name).to eq('2078/79')
+      expect(fiscal_years[2].name).to eq('2079/80')
+      expect(fiscal_years[3].name).to eq('2080/81')
+    end
   end
 end

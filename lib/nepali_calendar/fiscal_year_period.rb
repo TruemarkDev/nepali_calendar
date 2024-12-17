@@ -13,5 +13,9 @@ module NepaliCalendar
     def days_in_year
       (end_date - start_date).to_i + 1
     end
+
+    def is_current?
+      start_date <= Date.today && end_date >= Date.today
+    end
   end
 end
