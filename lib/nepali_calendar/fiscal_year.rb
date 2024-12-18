@@ -11,14 +11,22 @@ module NepaliCalendar
 
     # returns start of fiscal year date in BS
     def beginning_of_year
-      start_date = start_year.to_s.prepend('20')
+      start_date = "20#{start_year}"
       NepaliCalendar::BsCalendar.new(nil, { year: start_date, month: 4, day: 1 })
     end
 
     # returns end of fiscal year date in BS
     def end_of_year
-      end_date = end_year.to_s.prepend('20')
+      end_date = "20#{end_year}" 
       NepaliCalendar::BsCalendar.new(nil, { year: end_date, month: 3, day: NepaliCalendar::BS[end_date.to_i][3] })
+    end
+
+    def next
+      NepaliCalendar::FiscalYear.new(end_year, (end_year.to_i + 1).to_s)
+    end
+
+    def is_current_fiscal_year?
+      start_year == self.class.current_fiscal_year.start_year && end_year == self.class.current_fiscal_year.end_year
     end
 
     # returns fiscal year date in BS
@@ -55,6 +63,34 @@ module NepaliCalendar
                     end
 
       NepaliCalendar::FiscalYear.new(fiscal_year.to_s.slice(0, 2), fiscal_year.to_s.slice(2, 2))
+    end
+
+    def self.fiscal_years_list_in_ad(start_date_ad)
+      start_date_bs = NepaliCalendar::BsCalendar.ad_to_bs(start_date_ad.year, start_date_ad.month, start_date_ad.day)
+      fiscal_years = []
+
+      fiscal_year = fiscal_year_in_bs_for_ad_date(Date.new(start_date_ad.year, start_date_ad.month, start_date_ad.day))
+
+      loop do
+        start_date = fiscal_year.beginning_of_year
+        end_date = fiscal_year.end_of_year
+    
+        start_date_ad = NepaliCalendar::AdCalendar.bs_to_ad(start_date.year, start_date.month, start_date.day)
+        end_date_ad = NepaliCalendar::AdCalendar.bs_to_ad(end_date.year, end_date.month, end_date.day)
+        fiscal_year_name = "#{start_date.year}/#{end_date.year.to_s.slice(2, 2)}"
+    
+        fiscal_years.append(NepaliCalendar::FiscalYearPeriod.new(
+          start_date: Date.new(start_date_ad.year, start_date_ad.month, start_date_ad.day),
+          end_date: Date.new(end_date_ad.year, end_date_ad.month, end_date_ad.day),
+          name: fiscal_year_name
+        ))
+
+        break if fiscal_year.is_current_fiscal_year?
+
+        fiscal_year = fiscal_year.next
+      end
+    
+      fiscal_years
     end
 
     # Should return the '7879' form of string.

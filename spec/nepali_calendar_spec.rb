@@ -196,5 +196,55 @@ describe NepaliCalendar do
       fiscal_year = NepaliCalendar::FiscalYear.current_fiscal_year
       expect(fiscal_year.to_s).to eq('7879')
     end
+
+    it 'returns the next fiscal year' do
+      fiscal_year = NepaliCalendar::FiscalYear.new(78, 79).next
+      expect(fiscal_year.to_s).to eq('7980')
+    end
+
+    it 'returns the list of fiscal years with start date and end date in AD' do
+      start_date_ad = Date.new(2020, 8, 1)
+      fiscal_years = NepaliCalendar::FiscalYear.fiscal_years_list_in_ad(start_date_ad)
+
+      expect(fiscal_years[0].name).to eq('2077/78')
+      expect(fiscal_years[0].start_date).to eq(Date.new(2020,07,16))
+      expect(fiscal_years[0].end_date).to eq(Date.new(2021,07,15))
+
+      expect(fiscal_years[1].name).to eq('2078/79')
+      expect(fiscal_years[1].start_date).to eq(Date.new(2021,07,16))
+      expect(fiscal_years[1].end_date).to eq(Date.new(2022,07,16))
+
+      expect(fiscal_years[2].name).to eq('2079/80')
+      expect(fiscal_years[2].start_date).to eq(Date.new(2022,07,17))
+      expect(fiscal_years[2].end_date).to eq(Date.new(2023,07,16))
+
+      expect(fiscal_years[3].name).to eq('2080/81')
+      expect(fiscal_years[3].start_date).to eq(Date.new(2023,07,17))
+      expect(fiscal_years[3].end_date).to eq(Date.new(2024,07,15))
+    end
+  end
+
+  context '#FiscalYearPeriod' do
+    let(:fiscal_year_period) { NepaliCalendar::FiscalYearPeriod.new(start_date: Date.new(2022,07,17), end_date: Date.new(2023,07,16), name: '2079/80') }
+
+    it 'returns the start date' do
+      expect(fiscal_year_period.start_date).to eq(Date.new(2022, 7, 17))
+    end
+
+    it 'returns the end date' do
+      expect(fiscal_year_period.end_date).to eq(Date.new(2023, 7, 16))
+    end
+
+    it 'returns the number of days in the fiscal year period' do
+      expect(fiscal_year_period.days_in_year).to eq(365)
+    end
+
+    it 'returns whether the fiscal year period is current' do
+      expect(fiscal_year_period.is_current?).to eq(false)
+
+      fiscal_year_period = NepaliCalendar::FiscalYearPeriod.new(start_date: 200.days.ago, end_date: 165.days.from_now, name: 'test')
+
+      expect(fiscal_year_period.is_current?).to eq(true)
+    end
   end
 end
