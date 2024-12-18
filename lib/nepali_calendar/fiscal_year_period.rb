@@ -11,7 +11,7 @@ module NepaliCalendar
     end
 
     def days_in_year
-      (end_date - start_date).to_i + 1
+      (start_date..end_date).count
     end
 
     def is_current?
