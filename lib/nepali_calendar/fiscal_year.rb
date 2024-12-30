@@ -67,6 +67,7 @@ module NepaliCalendar
 
     def self.fiscal_years_list_in_ad(start_date_ad)
       start_date_bs = NepaliCalendar::BsCalendar.ad_to_bs(start_date_ad.year, start_date_ad.month, start_date_ad.day)
+      upto_year = current_fiscal_year.next
       fiscal_years = []
 
       fiscal_year = fiscal_year_in_bs_for_ad_date(Date.new(start_date_ad.year, start_date_ad.month, start_date_ad.day))
@@ -85,7 +86,7 @@ module NepaliCalendar
           name: fiscal_year_name
         ))
 
-        break if fiscal_year.is_current_fiscal_year?
+        break if fiscal_year.start_year == upto_year.start_year
 
         fiscal_year = fiscal_year.next
       end

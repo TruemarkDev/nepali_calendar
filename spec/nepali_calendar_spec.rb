@@ -221,6 +221,14 @@ describe NepaliCalendar do
       expect(fiscal_years[3].name).to eq('2080/81')
       expect(fiscal_years[3].start_date).to eq(Date.new(2023,07,17))
       expect(fiscal_years[3].end_date).to eq(Date.new(2024,07,15))
+
+      expect(fiscal_years[4].name).to eq('2081/82')
+      expect(fiscal_years[4].start_date).to eq(Date.new(2024,07,16))
+      expect(fiscal_years[4].end_date).to eq(Date.new(2025,07,15))
+
+      expect(fiscal_years[5].name).to eq('2082/83')
+      expect(fiscal_years[5].start_date).to eq(Date.new(2025,07,16))
+      expect(fiscal_years[5].end_date).to eq(Date.new(2026,07,16))
     end
   end
 
