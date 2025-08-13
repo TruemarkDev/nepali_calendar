@@ -2,8 +2,8 @@
 
 module NepaliCalendar
   class BsCalendar < NepaliCalendar::Calendar
-    MONTHNAMES = %w[nil Baisakh Jestha Ashad Shrawn Bhadra Ashwin Kartik Mangshir Poush Magh Falgun Chaitra].freeze
-    DAYNAMES = %w[nil Aitabar Sombar Mangalbar Budhbar Bihibar Sukrabar Sanibar].freeze
+    MONTHNAMES = %w[nil Baisakh Jestha Ashad Shrawan Bhadra Ashwin Kartik Mangshir Poush Magh Falgun Chaitra].freeze
+    DAYNAMES = %w[nil Aaitabar Sombar Mangalbar Budhabar Bihibar Sukrabar Sanibar].freeze
     class << self
       def ad_to_bs(year, month, day)
         raise NepaliCalendar::Calendar::NilDateFieldsException unless valid_date_input?(year, month, day)
